@@ -1,6 +1,6 @@
 #BlueJ class context
 comment0.target=Jmart
-comment0.text=\r\n\ class\ Jmart\r\n\r\n\ @Febriana\ Pasonang\ Sidauruk\ (1906300725)\r\n\ @11\ September\ 2021\r\n
+comment0.text=\r\n\ class\ Jmart\r\n\r\n\ @author\ Febriana\ Pasonang\ Sidauruk\ (1906300725)\r\n\ @version\ 11\ September\ 2021\r\n
 comment1.params=
 comment1.target=int\ getPromo()
 comment2.params=
@@ -10,9 +10,9 @@ comment3.target=float\ getDiscountPercentage(int,\ int)
 comment4.params=price\ discountPercentage
 comment4.target=int\ getDiscountedPrice(int,\ float)
 comment5.params=discountedPrice\ discountPercentage
-comment5.target=int\ OriginalPrice(int,\ float)
+comment5.target=int\ getOriginalPrice(int,\ float)
 comment6.params=
-comment6.target=float\ CommissionMultiplier()
+comment6.target=float\ getCommissionMultiplier()
 comment7.params=price
 comment7.target=int\ getAdjustedPrice(int)
 comment8.params=price
