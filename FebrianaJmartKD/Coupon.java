@@ -35,7 +35,7 @@ public class Coupon
     }
     
     public boolean canApply(PriceTag priceTag){
-    if((priceTag.getAdjustedPrice() >= minimum) && (used == false)){
+    if(priceTag.getAdjustedPrice() >= minimum && used == false){
     return true;
     }
     else{
@@ -47,10 +47,13 @@ public class Coupon
     used = true;
     
     if(type==Type.DISCOUNT){
-    return (priceTag.getAdjustedPrice() * ((100-cut)/100));
+         return (100 - cut) / 100 * priceTag.getAdjustedPrice();
+    }
+    else if(type == Type.REBATE){
+        return priceTag.getAdjustedPrice() - priceTag.price;
     }
     else {
-    return (priceTag.getAdjustedPrice()-cut);
+        return 0.0;
     }
     }
 }

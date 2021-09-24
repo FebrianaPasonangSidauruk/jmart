@@ -16,14 +16,17 @@ public class Jmart
     }
     
     public static Product createProduct(){
-    return null;
+        PriceTag priceTag = new PriceTag(10000);
+        Product product = new Product("PULPEN",3,false,priceTag, ProductCategory.STATIONERY);
+        return product;
     }
     
-    public static Coupon createCoupun(){
-    return null;
+    public static Coupon createCoupon(){
+        Coupon coupon = new Coupon("Hari Merdeka",1, Coupon.Type.DISCOUNT, 17, 8000);
+       return coupon;
     }
     
     public static ShipmentDuration createShipmentDuration(){
-    return null;
+        return new ShipmentDuration(ShipmentDuration.REGULER, ShipmentDuration.KARGO);
     }
 }
