@@ -50,7 +50,7 @@ public class Coupon
          return (100 - cut) / 100 * priceTag.getAdjustedPrice();
     }
     else if(type == Type.REBATE){
-        return priceTag.getAdjustedPrice() - priceTag.price;
+        return priceTag.getAdjustedPrice() - cut;
     }
     else {
         return 0.0;
