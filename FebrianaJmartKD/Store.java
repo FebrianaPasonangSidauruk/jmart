@@ -32,4 +32,11 @@ public class Store extends Recognizable implements FileParser
         return false;
     }
     
+    public String toString(){
+        return(
+            "name: " + this.name +"\n" +
+            "address: " + this.address + "\n" +
+            "phoneNumber: " + this.phoneNumber + "\n"
+        );
+    }
 }

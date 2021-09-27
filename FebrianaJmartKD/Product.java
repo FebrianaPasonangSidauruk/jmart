@@ -7,9 +7,8 @@ package FebrianaJmartKD;
  * @author Febriana Pasonang Sidauruk
  * @version 18 September 2021
  */
-public class Product extends Recognizable
+public class Product extends Recognizable implements FileParser
 {
-    private static int idCounter = 0;
     public int storeId;
     public Store store;
     public int id = 0;
@@ -19,8 +18,9 @@ public class Product extends Recognizable
     public PriceTag priceTag;
     public ProductCategory category;
     public ProductRating rating;
+    public Shipment.MultiDuration multiDuration;
     
-    public Product(int id, int storeId, String name, int weight, boolean conditionUsed, PriceTag priceTag, ProductCategory category){
+    public Product(int id, int storeId, String name, int weight, boolean conditionUsed, PriceTag priceTag, ProductCategory category, Shipment.MultiDuration multiDuration){
     super(id);
     this.storeId = storeId;
     this.name = name;
@@ -29,17 +29,20 @@ public class Product extends Recognizable
     this.priceTag = priceTag;
     this.category = category;
     this.rating = new ProductRating();
-    id = idCounter++;
+    this.multiDuration = multiDuration;
     }
     
-    public Product(int id, Store store, String name, int weight, boolean conditionUsed, PriceTag priceTag, ProductCategory category){
-    super(id);
-    this.name = name;
-    this.weight = weight;
-    this.conditionUsed = conditionUsed;
-    this.priceTag = priceTag;
-    this.category = category;
-    this.rating = rating;
-    this.store = store;
+    public String toString(){
+        return "Name: " + this.name +
+                "\nWeight: " + this.weight +
+                "\nconditionUsed: " + this.conditionUsed +
+                "\npriceTag: " + this.priceTag +
+                "\ncategory: " + this.category +
+                "\nrating: " + this.rating +
+                "\nstoreId: " + this.storeId;
+    }
+    
+    public boolean read(String content){
+        return false;
     }
 }

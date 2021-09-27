@@ -17,8 +17,9 @@ public class Jmart
     
     public static Product createProduct(){
         PriceTag priceTag = new PriceTag(10000);
-        Product product = new Product("PULPEN",3,false,priceTag, ProductCategory.STATIONERY);
-        return product;
+        //Product product = new Product("PULPEN",3,false,priceTag, ProductCategory.STATIONERY);
+        //return product;
+        return null;
     }
     
     public static Coupon createCoupon(){
@@ -26,7 +27,8 @@ public class Jmart
        return coupon;
     }
     
-    public static ShipmentDuration createShipmentDuration(){
-        return new ShipmentDuration(ShipmentDuration.REGULER, ShipmentDuration.KARGO);
-    }
+    public static Duration createDuration(){
+        //return new ShipmentDuration(ShipmentDuration.REGULER, ShipmentDuration.KARGO);
+        return null;
+   }
 }
