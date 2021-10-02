@@ -19,14 +19,17 @@ public class Payment extends Invoice implements Transactor
         this.shipment = shipment;
     }
     
+    @Override
     public double getTotalPay(){
         return 0.0;
     }
-
+    
+    @Override
     public boolean validate(){
         return false;
     }
     
+    @Override
     public Invoice perform(){
         return null;
     }

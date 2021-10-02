@@ -20,8 +20,8 @@ public class Store extends Recognizable implements FileParser
         this.phoneNumber = phoneNumber;
     }
     
-    public Store(Account account, int accountId, String name, String address, String phoneNumber){
-        super(accountId);
+    public Store(Account account, String name, String address, String phoneNumber){
+        super(account.id);
         this.name = name;
         this.address = address;
         this.phoneNumber = phoneNumber;
@@ -32,6 +32,7 @@ public class Store extends Recognizable implements FileParser
         return false;
     }
     
+    @Override
     public String toString(){
         return(
             "name: " + this.name +"\n" +

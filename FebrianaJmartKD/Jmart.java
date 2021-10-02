@@ -23,8 +23,7 @@ public class Jmart
     }
     
     public static Coupon createCoupon(){
-        Coupon coupon = new Coupon("Hari Merdeka",1, Coupon.Type.DISCOUNT, 17, 8000);
-       return coupon;
+        return null;
     }
     
     public static Duration createDuration(){

@@ -7,7 +7,7 @@ package FebrianaJmartKD;
  * @author Febriana Pasonang Sidauruk
  * @version 20 September 2021
  */
-public class Coupon
+public abstract class Coupon extends Recognizable implements FileParser
 {
     public final String name;
     public final int code;
@@ -18,16 +18,17 @@ public class Coupon
     
     public enum Type{
     DISCOUNT,
-    REBATE
+    REBATE;
     }
     
-    public Coupon(String name, int code, Type type, double cut, double minimum){
-    this.name = name;
-    this.code = code;
-    this.type = type;
-    this.cut = cut;
-    this.minimum = minimum;
-    this.used = false;
+    public Coupon(int id, String name, int code, Type type, double cut, double minimum){
+        super(id);
+        this.name = name;
+        this.code = code;
+        this.type = type;
+        this.cut = cut;
+        this.minimum = minimum;
+        used = false;
     }
     
     public boolean isUsed(){
@@ -56,6 +57,8 @@ public class Coupon
         return 0.0;
     }
     }
+    
+    
 }
 
 

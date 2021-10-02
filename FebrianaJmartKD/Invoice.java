@@ -20,7 +20,7 @@ public abstract class Invoice extends Recognizable implements FileParser
     NONE,
     BAD,
     NEUTRAL,
-    GOOD 
+    GOOD
     }
     
     public enum Status{
@@ -47,6 +47,6 @@ public abstract class Invoice extends Recognizable implements FileParser
         return false;
     }
     
-    abstract double getTotalPay();
+    public abstract double getTotalPay();
     
 }

@@ -10,8 +10,6 @@ package FebrianaJmartKD;
 public class Product extends Recognizable implements FileParser
 {
     public int storeId;
-    public Store store;
-    public int id = 0;
     public String name;
     public int weight;
     public boolean conditionUsed;
@@ -32,6 +30,7 @@ public class Product extends Recognizable implements FileParser
     this.multiDuration = multiDuration;
     }
     
+    @Override
     public String toString(){
         return "Name: " + this.name +
                 "\nWeight: " + this.weight +

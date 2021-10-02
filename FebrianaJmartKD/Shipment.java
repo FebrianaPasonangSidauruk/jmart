@@ -15,7 +15,10 @@ public class Shipment implements FileParser
     public String receipt;
     
     public Shipment(String address, int shipmentCost, Duration duration, String receipt){
-    
+        this.address = address;
+        this.shipmentCost = shipmentCost;
+        this.duration = duration;
+        this.receipt = receipt;
     }
     
     @Override
@@ -47,11 +50,16 @@ public class Shipment implements FileParser
             for (Duration arg : args) { 
                 flags |= arg.bit; 
             }
-            bit = flags;
+            this.bit = flags;
         }
         
         public boolean isDuration(Duration reference){
-            return (bit & reference.bit) != 0;
+            if ((bit & reference.bit) != 0){
+                return true;
+            }
+            else{
+                return false;
+            }
         }
     }
 
