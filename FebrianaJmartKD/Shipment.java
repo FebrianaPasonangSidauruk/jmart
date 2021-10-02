@@ -7,6 +7,11 @@ package FebrianaJmartKD;
  * @author Febriana Pasonang Sidauruk
  * @version 27 September 2021
  */
+
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 public class Shipment implements FileParser
 {
     public String address;
@@ -33,12 +38,30 @@ public class Shipment implements FileParser
         public static final Duration NEXT_DAY = new Duration((byte)(1<<2));
         public static final Duration REGULER = new Duration((byte)(1<<3));
         public static final Duration KARGO = new Duration((byte)(1<<4));
-        public byte bit;
-
+        public final byte bit;
+        public static final SimpleDateFormat ESTIMATION_FORMAT = new SimpleDateFormat("E MMMM dd yyyy"); 
+        
         private Duration(byte bit){
             this.bit = bit;
         }
-
+        
+        
+        public String getEstimatedArrival(Date reference){
+             Calendar cal = Calendar.getInstance();
+             cal.setTime(reference);
+             
+               if (bit == Duration.NEXT_DAY.bit){
+                cal.add(Calendar.DATE, 1);
+            }
+            else if (bit == Duration.REGULER.bit){
+                cal.add(Calendar.DATE, 2);
+            }
+            else if (bit == Duration.KARGO.bit){
+                cal.add(Calendar.DATE, 5);
+            }
+            
+            return ESTIMATION_FORMAT.format(cal.getTime());
+        }
     }
     
     public class MultiDuration{
@@ -54,12 +77,7 @@ public class Shipment implements FileParser
         }
         
         public boolean isDuration(Duration reference){
-            if ((bit & reference.bit) != 0){
-                return true;
-            }
-            else{
-                return false;
-            }
+            return(bit & reference.bit)!= 0;
         }
     }
 

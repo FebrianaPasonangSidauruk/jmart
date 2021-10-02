@@ -7,18 +7,19 @@ package FebrianaJmartKD;
  * @author Febriana Pasonang Sidauruk (1906300725)
  * @version 11 September 2021
  */
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Jmart
 {
     
     public static void main(String[] args)
     {
-        
+       System.out.println(Shipment.Duration.NEXT_DAY.getEstimatedArrival(new Date())); 
     }
     
     public static Product createProduct(){
-        PriceTag priceTag = new PriceTag(10000);
-        //Product product = new Product("PULPEN",3,false,priceTag, ProductCategory.STATIONERY);
-        //return product;
         return null;
     }
     
@@ -26,8 +27,7 @@ public class Jmart
         return null;
     }
     
-    public static Duration createDuration(){
-        //return new ShipmentDuration(ShipmentDuration.REGULER, ShipmentDuration.KARGO);
+    public static Shipment.Duration createShipmentDuration(){
         return null;
    }
 }

@@ -1,6 +1,5 @@
 #BlueJ class context
 comment0.target=Jmart
-comment0.text=\r\n\ class\ Jmart\r\n\r\n\ @author\ Febriana\ Pasonang\ Sidauruk\ (1906300725)\r\n\ @version\ 11\ September\ 2021\r\n
 comment1.params=args
 comment1.target=void\ main(java.lang.String[])
 comment2.params=
@@ -8,5 +7,5 @@ comment2.target=Product\ createProduct()
 comment3.params=
 comment3.target=Coupon\ createCoupon()
 comment4.params=
-comment4.target=Duration\ createDuration()
+comment4.target=Shipment.Duration\ createShipmentDuration()
 numComments=5

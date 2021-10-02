@@ -7,9 +7,14 @@ package FebrianaJmartKD;
  * @author Febriana Pasonang Sidauruk
  * @version 27 September 2021
  */
+
+
+import java.util.Date;
+import java.text.SimpleDateFormat;
+
 public abstract class Invoice extends Recognizable implements FileParser
 {
-    public String date;
+    public Date date;
     public int buyerId;
     public int productId;
     public int complaintId;
@@ -37,7 +42,7 @@ public abstract class Invoice extends Recognizable implements FileParser
         super(id);
         this.buyerId = buyerId;
         this.productId = productId;
-        this.date = "date";
+        this.date = new Date();
         this.rating = Rating.NONE;
         this.status = status.WAITING_CONFIRMATION;
     }
