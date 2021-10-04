@@ -7,8 +7,14 @@ package FebrianaJmartKD;
  * @author Febriana Pasonang Sidauruk
  * @version 25 September 2021
  */
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class Account extends Recognizable implements FileParser
 {
+    public static final String REGEX_EMAIL = "^[a-zA-Z0-9&*_~]+(\\.[a-zA-Z0-9&*_~]+)*@[a-zA-Z0-9][a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*$";
+    public static final String REGEX_PASSWORD = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?!.* ).{8,}$";
     public String name;
     public String email;
     public String password;
@@ -34,6 +40,16 @@ public class Account extends Recognizable implements FileParser
             "email: " + this.email + "\n" +
             "password: " + this.password + "\n"
         );
+    }
+    
+    
+     public boolean validate()
+    {
+        Pattern patternEmail = Pattern.compile(REGEX_EMAIL);
+        Matcher matcherEmail = patternEmail.matcher(email);
+        Pattern patternPassword = Pattern.compile(REGEX_PASSWORD);
+        Matcher matcherPassword = patternPassword.matcher(password);
+        return matcherEmail.find() && matcherPassword.find();
     }
 
 }

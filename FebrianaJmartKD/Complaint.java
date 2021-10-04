@@ -11,6 +11,7 @@ package FebrianaJmartKD;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 
+
 public class Complaint extends Recognizable implements FileParser
 {
    public Date date;
@@ -28,4 +29,9 @@ public class Complaint extends Recognizable implements FileParser
         return false;
     }
     
+    public String toString(){
+        SimpleDateFormat SDFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String dateFormat = SDFormat.format(this.date);
+        return ("Complaint{date=" + dateFormat + "desc='" +this.desc+ "'}");
+    }
 }
