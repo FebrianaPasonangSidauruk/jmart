@@ -11,39 +11,32 @@ package FebrianaJmartKD;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Store extends Recognizable implements FileParser
+public class Store
 {
     public String name;
     public String address;
     public String phoneNumber;
-    public static final String REGEX_PHONE = "^\\d{9, 12}$";
-    public static final String REGEX_NAME = "^[A-Z](?!.*(\\s)\1).{4, 20}$";
+    public double balance;
+    public static final String REGEX_PHONE = "^[0-9]{9,12}";
+    public static final String REGEX_NAME = "^[A-Z](?!.*([ ])\1).{3,19}$";
     
-    public Store(int accountId, String name, String address, String phoneNumber){
-        super(accountId);
+    public Store(String name, String address, String phoneNumber, double balance){
         this.name = name;
         this.address = address;
         this.phoneNumber = phoneNumber;
-    }
-    
-    public Store(Account account, String name, String address, String phoneNumber){
-        super(account.id);
-        this.name = name;
-        this.address = address;
-        this.phoneNumber = phoneNumber;
+        this.balance = balance;
     }
     
     @Override
-    public boolean read(String content){
+    /*public boolean read(String content){
         return false;
-    }
-    
-    @Override
+    }*/
+
     public String toString(){
         return(
-            "name: " + this.name +"\n" +
-            "address: " + this.address + "\n" +
-            "phoneNumber: " + this.phoneNumber + "\n"
+            "name: " + name +"\n" +
+            "address: " + address + "\n" +
+            "phoneNumber: " + phoneNumber + "\n"
         );
     }
     

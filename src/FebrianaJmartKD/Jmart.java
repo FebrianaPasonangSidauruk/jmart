@@ -51,7 +51,7 @@ public class Jmart
        System.out.println(Shipment.Duration.NEXT_DAY.getEstimatedArrival(new Date())); */
     }
     
-    public static Product createProduct(){
+    /*public static Product createProduct(){
         return null;
     }
     
@@ -61,5 +61,5 @@ public class Jmart
     
     public static Shipment.Duration createShipmentDuration(){
         return null;
-   }
+   }*/
 }

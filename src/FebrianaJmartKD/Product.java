@@ -7,41 +7,41 @@ package FebrianaJmartKD;
  * @author Febriana Pasonang Sidauruk
  * @version 18 September 2021
  */
-public class Product extends Recognizable implements FileParser
+public class Product extends Recognizable
 {
-    public int storeId;
+    public int accountId;
     public String name;
     public int weight;
     public boolean conditionUsed;
-    public PriceTag priceTag;
+    public double discount;
     public ProductCategory category;
-    public ProductRating rating;
-    public Shipment.MultiDuration multiDuration;
+    public double price;
+    public byte shipmentPlans;
     
-    public Product(int id, int storeId, String name, int weight, boolean conditionUsed, PriceTag priceTag, ProductCategory category, Shipment.MultiDuration multiDuration){
-    super(id);
-    this.storeId = storeId;
-    this.name = name;
-    this.weight = weight;
-    this.conditionUsed = conditionUsed;
-    this.priceTag = priceTag;
-    this.category = category;
-    this.rating = new ProductRating();
-    this.multiDuration = multiDuration;
+    public Product(int accountId, String name, int weight, boolean conditionUsed, double price, double discount, ProductCategory category, byte shipmentPlans)
+    {
+        this.accountId = accountId;
+        this.name = name;
+        this.weight = weight;
+        this.conditionUsed = conditionUsed;
+        this.price = price;
+        this.discount = discount;
+        this.category = category;
+        this.shipmentPlans = shipmentPlans;
     }
     
     @Override
     public String toString(){
-        return "Name: " + this.name +
-                "\nWeight: " + this.weight +
-                "\nconditionUsed: " + this.conditionUsed +
-                "\npriceTag: " + this.priceTag +
-                "\ncategory: " + this.category +
-                "\nrating: " + this.rating +
-                "\nstoreId: " + this.storeId;
+        return "Name: " + name +
+                "\nWeight: " + weight +
+                "\nconditionUsed: " + conditionUsed +
+                "\nprice: " + price +
+                "\ncategory: " + category +
+                "\ndiscount: " + discount +
+                "\naccountId: " + accountId;
     }
     
-    public boolean read(String content){
+    /*public boolean read(String content){
         return false;
-    }
+    }*/
 }

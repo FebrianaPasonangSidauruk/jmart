@@ -11,9 +11,9 @@ public class Recognizable implements Comparable<Recognizable>
 {
     public final int id;
     
-    protected Recognizable (int id){
+    protected Recognizable (){
     
-        this.id = id;
+        this.id = 1;
     }
 
     @Override
@@ -25,9 +25,13 @@ public class Recognizable implements Comparable<Recognizable>
     public boolean equals(Object obj){
     if(obj instanceof Recognizable){
             Recognizable recognizable = (Recognizable) obj;
-            return (recognizable.id == this.id);
+            if(this.id == recognizable.id){
+                return true;
+            }
+            return false;
+        }else{
+            return false;
         }
-    return false;
     }
     
     public boolean equals(Recognizable recognizable){

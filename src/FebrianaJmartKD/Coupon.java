@@ -7,7 +7,7 @@ package FebrianaJmartKD;
  * @author Febriana Pasonang Sidauruk
  * @version 20 September 2021
  */
-public abstract class Coupon extends Recognizable implements FileParser
+public class Coupon extends Recognizable
 {
     public final String name;
     public final int code;
@@ -21,44 +21,43 @@ public abstract class Coupon extends Recognizable implements FileParser
     REBATE;
     }
     
-    public Coupon(int id, String name, int code, Type type, double cut, double minimum){
-        super(id);
+    public Coupon(String name, int code, Type type, double cut, double minimum)
+    {
         this.name = name;
         this.code = code;
         this.type = type;
         this.cut = cut;
         this.minimum = minimum;
-        used = false;
+        this.used = false;
     }
     
     public boolean isUsed(){
-    return used;
+        return used;
     }
     
-    public boolean canApply(PriceTag priceTag){
-    if(priceTag.getAdjustedPrice() >= minimum && used == false){
-    return true;
-    }
-    else{
-    return false;
-    }
+    public boolean canApply(double price, double discount){
+        if(Treasury.getAdjustedPrice(price, discount) >= minimum && !used){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
     
-    public double apply(PriceTag priceTag){
+    public double apply(double price, double discount){
     used = true;
     
     if(type==Type.DISCOUNT){
-         return (100 - cut) / 100 * priceTag.getAdjustedPrice();
+        if(cut >= 100){
+            return (Treasury.getAdjustedPrice(price, discount) - Treasury.getAdjustedPrice(price, discount) * (100 / 100)); //cut max 100%
+        }else if(cut <= 0){
+            return (Treasury.getAdjustedPrice(price, discount) - Treasury.getAdjustedPrice(price, discount) * (0 / 100)); //cut min 0%
+        }else{
+            return (Treasury.getAdjustedPrice(price, discount) - Treasury.getAdjustedPrice(price, discount) * (cut / 100));
+        }
     }
-    else if(type == Type.REBATE){
-        return priceTag.getAdjustedPrice() - cut;
+    return (Treasury.getAdjustedPrice(price, cut) - cut);
     }
-    else {
-        return 0.0;
-    }
-    }
-    
-    
 }
 
 
