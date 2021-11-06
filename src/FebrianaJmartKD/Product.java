@@ -7,7 +7,7 @@ package FebrianaJmartKD;
  * @author Febriana Pasonang Sidauruk
  * @version 18 September 2021
  */
-public class Product extends Recognizable
+public class Product extends Serializable
 {
     public int accountId;
     public String name;

@@ -7,7 +7,7 @@ package FebrianaJmartKD;
  * @author Febriana Pasonang Sidauruk
  * @version 20 September 2021
  */
-public class Coupon extends Recognizable
+public class Coupon extends Serializable
 {
     public final String name;
     public final int code;

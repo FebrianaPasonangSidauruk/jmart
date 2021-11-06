@@ -10,10 +10,9 @@ package FebrianaJmartKD;
 
 
 import java.util.Date;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-public abstract class Invoice extends Recognizable
+public abstract class Invoice extends Serializable
 {
     public Date date;
     public int buyerId;
