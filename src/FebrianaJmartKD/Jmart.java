@@ -86,6 +86,12 @@ public class Jmart {
     }
 
     private static List<Product> paginate(List<Product> list, int page, int pageSize, Predicate<Product> pred){
+        if(page<0){
+            page=0;
+        }
+        if(pageSize<0){
+            pageSize=0;
+        }
         return list.stream().filter(n -> pred.predicate(n)).skip(page * pageSize).limit(pageSize).collect(Collectors.toList());
     }
 
