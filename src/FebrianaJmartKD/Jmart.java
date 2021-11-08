@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
+import java.util.stream.Collectors;
 
 public class Jmart {
 
@@ -54,19 +55,40 @@ public class Jmart {
         }
         return products;
     }
+
+    public static List<Product> filterByName(List<Product> list, String search, int page, int pageSize){
+        Predicate<Product> pred= n -> (n.name.toLowerCase().contains(search.toLowerCase()));
+        return paginate(list, page, pageSize, pred);
+    }
+
+    public static List<Product> filterByAccountId(List<Product> list, int accountId, int page, int pageSize){
+        Predicate<Product> pred= n -> (n.accountId == accountId);
+        return paginate(list, page, pageSize, pred);
+    }
+
     public static void main(String[] args)
     {
         try{
             // sesuaikan argument method read sesuai dengan lokasi resource
             List<Product> list = read("C:/Users/FEBRIANA/jmart/jmart/src/randomProductList.json");
-            List<Product> filtered = filterByPrice(list, 20000.0, 25000.0);
-            filtered.forEach(product -> System.out.println(product.price));
+            //List<Product> filtered = filterByPrice(list, 20000.0, 25000.0);
+            //filtered.forEach(product -> System.out.println(product.price));
+
+            List<Product> filteredName = filterByName(list, "at", 1, 2);
+            filteredName.forEach(product -> System.out.println(product.name));
+            List<Product> filteredAccount = filterByAccountId(list, 1, 0, 5);
+            filteredAccount.forEach(product -> System.out.println(product.name));
         }catch (Throwable t)
         {
             t.printStackTrace();
         }
 
     }
+
+    private static List<Product> paginate(List<Product> list, int page, int pageSize, Predicate<Product> pred){
+        return list.stream().filter(n -> pred.predicate(n)).skip(page * pageSize).limit(pageSize).collect(Collectors.toList());
+    }
+
     public static List<Product> read(String filepath) throws FileNotFoundException {
         List<Product> products = new ArrayList<>();
         try{
