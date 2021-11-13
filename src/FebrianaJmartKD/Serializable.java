@@ -13,7 +13,7 @@ public class Serializable implements Comparable<Serializable>
     public final int id;
     public int incr;
 
-    private static HashMap<Class<?>, Integer> mapCounter = new HashMap<>();
+    private static Map<Class<?>, Integer> mapCounter = new HashMap<>();
 
     protected Serializable(){
         Class gotClass = getClass();
@@ -55,7 +55,7 @@ public class Serializable implements Comparable<Serializable>
 
     public static <T extends Serializable> int setClosingId(Class<T> clazz, int id){
 
-        return mapCounter.getOrDefault(clazz, id);
+        return mapCounter.put(clazz, id);
     }
 
     public static <T extends Serializable> int getClosingId(Class<T> clazz){
