@@ -8,17 +8,13 @@ package FebrianaJmartKD;
  * @version 11 September 2021
  */
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.io.BufferedReader;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 import com.google.gson.*;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Scanner;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.reflect.TypeToken;
@@ -26,6 +22,7 @@ import com.google.gson.stream.JsonReader;
 import java.util.stream.Collectors;
 
 public class Jmart {
+
 
     public static List<Product> filterByCategory(List<Product> list, ProductCategory category){
         List<Product> products = new ArrayList<>();
@@ -37,23 +34,14 @@ public class Jmart {
         return products;
     }
     public static List<Product> filterByPrice(List<Product> list, double minPrice, double maxPrice){
-        List<Product> products = new ArrayList<>();
-        for(int i = 0; i < list.size(); i++){
-            if(minPrice <= 0.0){
-                if(list.get(i).price <= maxPrice){
-                    products.add(list.get(i));
-                }
-            }else if(maxPrice <= 0.0){
-                if(list.get(i).price >= minPrice){
-                    products.add(list.get(i));
-                }
-            }else{
-                if(list.get(i).price >= minPrice && list.get(i).price <= maxPrice){
-                    products.add(list.get(i));
-                }
-            }
+        if(minPrice <= 0){
+            list.removeIf(product -> product.price > maxPrice);
+        }else if(maxPrice <= 0){
+            list.removeIf(product -> product.price < minPrice);
+        }else{
+            list.removeIf(product -> (product.price < minPrice) || (product.price > maxPrice));
         }
-        return products;
+        return list;
     }
 
     public static List<Product> filterByName(List<Product> list, String search, int page, int pageSize){
@@ -79,16 +67,14 @@ public class Jmart {
             List<Product> filteredAccount = filterByAccountId(list, 1, 0, 5);
             filteredAccount.forEach(product -> System.out.println(product.name));*/
 
-            /*String filepath = "C:/Users/FEBRIANA/jmart/jmart/src/account.json";
+            String filepath = "C:/Users/FEBRIANA/jmart/jmart/src/account.json";
 
             JsonTable<Account> tableAccount = new JsonTable<>(Account.class, filepath);
             tableAccount.add(new Account("name", "email", "password"));
             tableAccount.writeJson();
 
             tableAccount = new JsonTable<>(Account.class, filepath);
-            tableAccount.forEach(account -> System.out.println(account.toString()));
-            
-             */
+            tableAccount.forEach(account -> System.out.println(account.toString() ));
 
         }catch (Throwable t)
         {
@@ -98,13 +84,16 @@ public class Jmart {
     }
 
     private static List<Product> paginate(List<Product> list, int page, int pageSize, Predicate<Product> pred){
-        if(page<0){
-            page=0;
+        try{
+            List<Product> filteredList = list.stream().filter(p -> pred.predicate(p)).collect(Collectors.toList());
+            int endIndex = (page * pageSize) + pageSize;
+            if(endIndex > filteredList.size()){
+                endIndex = filteredList.size();
+            }
+            return filteredList.subList((page * pageSize), endIndex);
+        }catch (Exception e){
+            return list.subList(0 ,0);
         }
-        if(pageSize<0){
-            pageSize=0;
-        }
-        return list.stream().filter(n -> pred.predicate(n)).skip(page * pageSize).limit(pageSize).collect(Collectors.toList());
     }
 
     public static List<Product> read(String filepath) throws FileNotFoundException {

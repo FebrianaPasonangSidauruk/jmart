@@ -1,5 +1,6 @@
 package FebrianaJmartKD;
-
+import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * class Payment
@@ -9,8 +10,20 @@ package FebrianaJmartKD;
  */
 public class Payment extends Invoice
 {
+    public ArrayList<Record> history = new ArrayList<>();
     public int productCount;
     public Shipment shipment;
+
+    static class Record{
+        public final Date date;
+        public String message;
+        public Status status;
+        public Record(Status status, String message){
+            this.date = new Date();
+            this.status = status;
+            this.message = message;
+        }
+    }
     
     public Payment(int buyerId, int productId, int productCount, Shipment shipment)
     {
@@ -20,8 +33,8 @@ public class Payment extends Invoice
     }
     
     @Override
-    public double getTotalPay(){
-        return 0.0;
+    public double getTotalPay(Product product){
+        return (productCount * Treasury.getAdjustedPrice(product.price, product.discount));
     }
     
     /*@Override

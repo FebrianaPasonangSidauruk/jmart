@@ -7,41 +7,40 @@ import java.util.Vector;
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 
-public class JsonTable <T> extends Vector {
+public class JsonTable <T> extends Vector<T> {
 
     public final String filepath;
     private static final Gson gson = new Gson();
 
-    public JsonTable(Class<T>clazz, String filepath) throws IOException{
+    public JsonTable(Class<T> clazz, String filepath) throws IOException {
         this.filepath = filepath;
+        try {
+            Class<T[]> arrayType = (Class<T[]>) Array.newInstance(clazz, 0).getClass();
+            T[] readresult = readJson(arrayType, filepath);
+            if(readresult != null) {
+                Collections.addAll(this, readresult);
+            }
+        } catch (FileNotFoundException e) {
+            File f = new File(filepath);
+            File f1 = f.getParentFile();
+            if(f1 != null) {
+                f.mkdir();
+            }
+            f.createNewFile();
+        }
+    }
+    public static <T> T readJson(Class<T> clazz, String filepath) throws FileNotFoundException{
+        Reader reader = new FileReader(filepath);
+        return gson.fromJson(reader, clazz);
     }
 
-    public static<T> JsonReader readJson(Class<T> clazz, String filepath) throws FileNotFoundException{
-        T clazzT = null;
-        try{
-            final JsonReader reader = new JsonReader(new FileReader(filepath));
-            clazzT = gson.fromJson(reader, clazz.getClass());
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
-        return(JsonReader) clazzT;
-    }
-
-    public void writeJson() throws IOException{
+    public void writeJson () throws IOException {
         writeJson(this, this.filepath);
     }
-
     public static void writeJson(Object object, String filepath) throws IOException{
-        try{
-            FileWriter writer = new  FileWriter(filepath);
-            String json = gson.toJson(object);
-            writer.write(gson.toJson(object));
-            writer.close();
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
+        FileWriter writer = new FileWriter(filepath);
+        writer.write(gson.toJson(object));
+        writer.close();
     }
 
 }

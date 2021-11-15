@@ -19,8 +19,8 @@ public abstract class Invoice extends Serializable
     public int productId;
     public int complaintId;
     public Rating rating;
-    public Status status;
-    public ArrayList<Record> history= new ArrayList<>();
+    //public Status status;
+    //public ArrayList<Record> history= new ArrayList<>();
     
     enum Rating{
     NONE,
@@ -44,16 +44,10 @@ public abstract class Invoice extends Serializable
         this.productId = productId;
         this.date = new Date();
         this.rating = Rating.NONE;
-        this.status = status.WAITING_CONFIRMATION;
         this.complaintId = -1;
-
     }
-
-    /*public boolean read(String content){
-        return false;
-    }*/
     
-    public abstract double getTotalPay();
+    public abstract double getTotalPay(Product product);
     
     class Record{
         public Status status;
