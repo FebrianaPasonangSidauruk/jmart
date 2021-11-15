@@ -20,11 +20,68 @@ import java.util.List;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Date;
 
 public class Jmart {
 
+    public static long DELIVERED_LIMIT_MS = 6;
+    public static long ON_DELIVERY_LIMIT_MS = 6;
+    public static long ON_PROGRESS_LIMIT_MS = 6;
+    public static long WAITING_CONF_LIMIT_MS = 6;
 
-    public static List<Product> filterByCategory(List<Product> list, ProductCategory category){
+    public static void main (String[] args){
+        try
+        {
+            // sesuaikan argument dibawah dengan lokasi resource file yang Anda unduh di EMAS!
+            JsonTable<Payment> table = new JsonTable<>(Payment.class, "randomPaymentList.json");
+            // membuat thread untuk payment pool
+            ObjectPoolThread<Payment>paymentPool =new ObjectPoolThread<Payment>("Thread-pp", Jmart::paymentTimekeeper);
+            // menjalankan thread (ingat menggunakan start bukan run), run melakukan instruksi dalam current thread
+            paymentPool.start();
+            //tambahkan seluruh payment hasil baca ke dalam pool
+            table.forEach(payment ->paymentPool.add(payment));
+            // berikan sinyal untuk keluar dari routine apabila seluruh objek telah di proses
+            while (paymentPool.size() != 0);
+            paymentPool.exit();
+            // tunggu hingga thread selesai di eksekusi
+            while (paymentPool.isAlive());
+            // thread telah berhasil di selesaikan
+            System.out.println("Thread exited successfully");
+            // cek hasil output
+            Gson gson = new Gson();
+            table.forEach(payment -> {
+                String history = gson.toJson(payment.history);
+                System.out.println(history);
+            });
+        }
+        catch (Throwable t) {
+            t.printStackTrace();
+        }
+
+    }
+
+    public static boolean paymentTimekeeper(Payment payment) {
+        Payment.Record record = payment.history.get(payment.history.size() - 1);
+        long elapsed = Math.abs(record.date.getTime() - (new Date()).getTime());
+
+        if(record.status == Invoice.Status.WAITING_CONFIRMATION && elapsed > WAITING_CONF_LIMIT_MS) {
+            payment.history.add(new Payment.Record(Invoice.Status.FAILED, "Waiting"));
+            return true;
+        } else if(record.status == Invoice.Status.ON_PROGRESS && elapsed > ON_PROGRESS_LIMIT_MS) {
+            payment.history.add(new Payment.Record(Invoice.Status.FAILED, "Progress"));
+            return true;
+        } else if(record.status == Invoice.Status.ON_DELIVERY && elapsed > ON_DELIVERY_LIMIT_MS) {
+            payment.history.add(new Payment.Record(Invoice.Status.DELIVERED, "Delivery"));
+            return false;
+        } else if(record.status == Invoice.Status.DELIVERED && elapsed > DELIVERED_LIMIT_MS) {
+            payment.history.add(new Payment.Record(Invoice.Status.FINISHED, "Finish"));
+            return true;
+        }
+        return false;
+    }
+
+    /*public static List<Product> filterByCategory(List<Product> list, ProductCategory category){
         List<Product> products = new ArrayList<>();
         for(Product product : list){
             if(product.category.equals(category)){
@@ -54,36 +111,10 @@ public class Jmart {
         return paginate(list, page, pageSize, pred);
     }
 
-    public static void main(String[] args)
-    {
-        try{
-            // sesuaikan argument method read sesuai dengan lokasi resource
-            //List<Product> list = read("C:/Users/FEBRIANA/jmart/jmart/src/randomProductList.json");
-            //List<Product> filtered = filterByPrice(list, 20000.0, 25000.0);
-            //filtered.forEach(product -> System.out.println(product.price));
+    
 
-            /*List<Product> filteredName = filterByName(list, "at", 1, 2);
-            filteredName.forEach(product -> System.out.println(product.name));
-            List<Product> filteredAccount = filterByAccountId(list, 1, 0, 5);
-            filteredAccount.forEach(product -> System.out.println(product.name));*/
 
-            String filepath = "C:/Users/FEBRIANA/jmart/jmart/src/account.json";
-
-            JsonTable<Account> tableAccount = new JsonTable<>(Account.class, filepath);
-            tableAccount.add(new Account("name", "email", "password"));
-            tableAccount.writeJson();
-
-            tableAccount = new JsonTable<>(Account.class, filepath);
-            tableAccount.forEach(account -> System.out.println(account.toString() ));
-
-        }catch (Throwable t)
-        {
-            t.printStackTrace();
-        }
-
-    }
-
-    private static List<Product> paginate(List<Product> list, int page, int pageSize, Predicate<Product> pred){
+    /*private static List<Product> paginate(List<Product> list, int page, int pageSize, Predicate<Product> pred){
         try{
             List<Product> filteredList = list.stream().filter(p -> pred.predicate(p)).collect(Collectors.toList());
             int endIndex = (page * pageSize) + pageSize;
@@ -109,6 +140,6 @@ public class Jmart {
             e.printStackTrace();
         }
         return products;
-    }
+    }*/
 
 }
