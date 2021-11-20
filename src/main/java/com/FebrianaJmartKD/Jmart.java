@@ -32,17 +32,17 @@ import java.util.stream.Collectors;
 
 public class Jmart {
 
-    public static long DELIVERED_LIMIT_MS = 6;
-    public static long ON_DELIVERY_LIMIT_MS = 6;
-    public static long ON_PROGRESS_LIMIT_MS = 6;
-    public static long WAITING_CONF_LIMIT_MS = 6;
+    public static long DELIVERED_LIMIT_MS ;
+    public static long ON_DELIVERY_LIMIT_MS ;
+    public static long ON_PROGRESS_LIMIT_MS ;
+    public static long WAITING_CONF_LIMIT_MS ;
 
     public static void main (String[] args){
         //SpringApplication.run(Jmart.class, args);
 
-            JsonDBEngine.Run(Jmart.class);
-            SpringApplication.run(Jmart.class, args);
-            //Runtime.getRuntime().addshutdownHook(new Thread(() -> JsonDBEngine.join()));
+        JsonDBEngine.Run(Jmart.class);
+        SpringApplication.run(Jmart.class, args);
+        Runtime.getRuntime().addShutdownHook(new Thread(() ->JsonDBEngine.join()));
 
         /*try
         {
