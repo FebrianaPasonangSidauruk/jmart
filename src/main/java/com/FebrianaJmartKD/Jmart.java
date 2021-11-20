@@ -8,21 +8,25 @@ package com.FebrianaJmartKD;
  * @version 11 September 2021
  */
 
+import com.FebrianaJmartKD.dbjson.JsonTable;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import com.FebrianaJmartKD.dbjson.JsonDBEngine;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import com.google.gson.*;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
-import com.google.gson.*;
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import java.util.stream.Collectors;
-import java.util.ArrayList;
-import java.util.Date;
 
 @SpringBootApplication
 
@@ -34,8 +38,13 @@ public class Jmart {
     public static long WAITING_CONF_LIMIT_MS = 6;
 
     public static void main (String[] args){
-        SpringApplication.run(Jmart.class, args);
-        try
+        //SpringApplication.run(Jmart.class, args);
+
+            JsonDBEngine.Run(Jmart.class);
+            SpringApplication.run(Jmart.class, args);
+            //Runtime.getRuntime().addshutdownHook(new Thread(() -> JsonDBEngine.join()));
+
+        /*try
         {
             // sesuaikan argument dibawah dengan lokasi resource file yang Anda unduh di EMAS!
             JsonTable<Payment> table = new JsonTable<>(Payment.class, "C:/Users/FEBRIANA/jmart/jmart/src/randomPaymentList.json");
@@ -61,29 +70,36 @@ public class Jmart {
         }
         catch (Throwable t) {
             t.printStackTrace();
-        }
+        }*/
 
     }
 
-    public static boolean paymentTimekeeper(Payment payment) {
-        Payment.Record record = payment.history.get(payment.history.size() - 1);
-        long elapsed = Math.abs(record.date.getTime() - (new Date()).getTime());
-
-        if(record.status == Invoice.Status.WAITING_CONFIRMATION && elapsed > WAITING_CONF_LIMIT_MS) {
-            payment.history.add(new Payment.Record(Invoice.Status.FAILED, "Waiting"));
-            return true;
-        } else if(record.status == Invoice.Status.ON_PROGRESS && elapsed > ON_PROGRESS_LIMIT_MS) {
-            payment.history.add(new Payment.Record(Invoice.Status.FAILED, "Progress"));
-            return true;
-        } else if(record.status == Invoice.Status.ON_DELIVERY && elapsed > ON_DELIVERY_LIMIT_MS) {
-            payment.history.add(new Payment.Record(Invoice.Status.DELIVERED, "Delivery"));
-            return false;
-        } else if(record.status == Invoice.Status.DELIVERED && elapsed > DELIVERED_LIMIT_MS) {
-            payment.history.add(new Payment.Record(Invoice.Status.FINISHED, "Finish"));
+    /*public static boolean paymentTimekeeper(Payment payment) {
+        if(payment.history.size() == 0){
             return true;
         }
-        return false;
-    }
+        else {
+            Payment.Record record = payment.history.get(payment.history.size() - 1);
+            long elapsed = System.currentTimeMillis() - record.date.getTime();
+
+            if (record.status == Invoice.Status.WAITING_CONFIRMATION && elapsed > WAITING_CONF_LIMIT_MS) {
+                payment.history.add(new Payment.Record(Invoice.Status.FAILED, "Waiting"));
+                return true;
+            } else if (record.status == Invoice.Status.ON_PROGRESS && elapsed > ON_PROGRESS_LIMIT_MS) {
+                payment.history.add(new Payment.Record(Invoice.Status.FAILED, "Progress"));
+                return true;
+            } else if (record.status == Invoice.Status.ON_DELIVERY && elapsed > ON_DELIVERY_LIMIT_MS) {
+                payment.history.add(new Payment.Record(Invoice.Status.DELIVERED, "Delivery"));
+                return true;
+            } else if (record.status == Invoice.Status.DELIVERED && elapsed > DELIVERED_LIMIT_MS) {
+                payment.history.add(new Payment.Record(Invoice.Status.FINISHED, "Finish"));
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+    }*/
 
     /*public static List<Product> filterByCategory(List<Product> list, ProductCategory category){
         List<Product> products = new ArrayList<>();

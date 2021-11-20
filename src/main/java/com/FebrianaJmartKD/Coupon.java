@@ -1,6 +1,8 @@
 package com.FebrianaJmartKD;
 
 
+import com.FebrianaJmartKD.dbjson.Serializable;
+
 /**
  * class Coupon
  *

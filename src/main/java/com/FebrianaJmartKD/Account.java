@@ -8,6 +8,8 @@ package com.FebrianaJmartKD;
  * @version 25 September 2021
  */
 
+import com.FebrianaJmartKD.dbjson.Serializable;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
