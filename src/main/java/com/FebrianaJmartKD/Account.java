@@ -23,11 +23,11 @@ public class Account extends Serializable
     public double balance;
     public Store store;
     
-    public Account(String name, String email, String password, double balance){
+    public Account(String name, String email, String password){
         this.name = name;
         this.email = email;
         this.password = password;
-        this.balance = balance;
+
     }
     
     /*@Override
