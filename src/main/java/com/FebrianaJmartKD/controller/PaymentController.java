@@ -3,42 +3,111 @@ import com.FebrianaJmartKD.ObjectPoolThread;
 import com.FebrianaJmartKD.Payment;
 import com.FebrianaJmartKD.dbjson.JsonTable;
 import org.springframework.web.bind.annotation.PostMapping;
-import com.FebrianaJmartKD.Account;
+import org.springframework.web.bind.annotation.*;
+import com.FebrianaJmartKD.dbjson.JsonAutowired;
+import com.FebrianaJmartKD.*;
 
-public class PaymentController {
+@RestController
+@RequestMapping("/payment")
+public class PaymentController implements BasicGetController<Payment>  {
     public static final long DELIVERED_LIMIT_MS =2;
     public static final long ON_DELIVERY_LIMIT_MS =4;
     public static final long ON_PROGRESS_LIMIT_MS =5;
     public static final long WAITING_CONF_LIMIT_MS =6;
-    public static JsonTable<Payment> paymentTable;
-    public static ObjectPoolThread<Payment> poolThread;
+    public static @JsonAutowired(value = Payment.class, filepath = "C:/Users/Febriana/jmart/jmart/src/main/java/com/Json/payment.json")
+    JsonTable<Payment> paymentTable;
+    public static ObjectPoolThread<Payment> poolThread = new ObjectPoolThread<Payment>("Thread", PaymentController::timekeeper);
 
     @PostMapping("/{id}/accept")
-    public boolean accept (int id){
-        return true;
+    boolean accept(@RequestParam int id) {
+        for(Payment payment : paymentTable){
+            if(payment.id == id){
+                if(payment.history.get(payment.history.size() - 1).status == Invoice.Status.WAITING_CONFIRMATION){
+                    payment.history.add(new Payment.Record(Invoice.Status.ON_PROGRESS, "ON_PROGRESS"));
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @PostMapping("/{id}/cancel")
-    public boolean cancel (int id){
-        return true;
+    boolean cancel(@PathVariable int id) {
+        for(Payment payment : paymentTable){
+            if(payment.id == id){
+                if(payment.history.get(payment.history.size() - 1).status == Invoice.Status.WAITING_CONFIRMATION){
+                    payment.history.add(new Payment.Record(Invoice.Status.CANCELLED, "CANCELLED"));
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @PostMapping("/create")
-    public Payment create (int buyerId, int productId, int productCount, String shipmentAddress, byte shipmentPlan){
+    Payment create(@RequestParam int buyerId, @RequestParam int productId, @RequestParam int productCount, @RequestParam String shipmentAddress, @RequestParam byte shipmentPlan) {
+        for(Account account : AccountController.accountTable){
+            if(account.id == buyerId){
+                for(Product product : ProductController.productTable){
+                    if(product.accountId == productId){
+                        Payment newPayment = new Payment(buyerId, productId, productCount, new Shipment(shipmentAddress, 0, shipmentPlan, null));
+                        double totalPay = newPayment.getTotalPay(product);
+                        if(account.balance >= totalPay){
+                            account.balance -= totalPay;
+                            newPayment.history.add(new Payment.Record(Invoice.Status.WAITING_CONFIRMATION, "WAITING_CONFIRMATION"));
+                            paymentTable.add(newPayment);
+                            poolThread.add(newPayment);
+                            return newPayment;
+                        }
+                    }
+                }
+            }
+        }
         return null;
     }
 
     public JsonTable<Payment> getJsonTable(){
-        return null;
+        return paymentTable;
     }
 
     @PostMapping("/{id}/submit")
-    public boolean submit(int id,String receipt){
-        return true;
+    boolean submit(@PathVariable int id, String receipt) {
+        for(Payment payment : paymentTable){
+            if(payment.id == id){
+                if(payment.history.get(payment.history.size() - 1).status == Invoice.Status.ON_PROGRESS){
+                    if(!receipt.isBlank()){
+                        payment.shipment.receipt = receipt;
+                        payment.history.add(new Payment.Record(Invoice.Status.ON_DELIVERY, "ON_DELIVERY"));
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
 
-    private boolean timekeeper(Payment payment){
-        return true;
+    private static boolean timekeeper(Payment payment){
+        if (payment.history.isEmpty()) {
+            return false;
+        } else {
+            Payment.Record record = payment.history.get(payment.history.size() - 1);
+            long elapsed = System.currentTimeMillis() - record.date.getTime();
+            if (record.status.equals(Invoice.Status.WAITING_CONFIRMATION) && (elapsed > WAITING_CONF_LIMIT_MS)) {
+                record.status = Invoice.Status.FAILED;
+                return true;
+            } else if (record.status.equals(Invoice.Status.ON_PROGRESS) && (elapsed > ON_PROGRESS_LIMIT_MS)) {
+                record.status = Invoice.Status.FAILED;
+                return true;
+            } else if (record.status.equals(Invoice.Status.ON_DELIVERY) && (elapsed > ON_PROGRESS_LIMIT_MS)) {
+                record.status = Invoice.Status.DELIVERED;
+                return true;
+            } else if (record.status.equals(Invoice.Status.DELIVERED) && (elapsed > DELIVERED_LIMIT_MS)) {
+                record.status = Invoice.Status.FINISHED;
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 }

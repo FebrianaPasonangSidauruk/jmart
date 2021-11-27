@@ -14,7 +14,7 @@ public class Payment extends Invoice
     public int productCount;
     public Shipment shipment;
 
-    static class Record{
+    public static class Record{
         public final Date date;
         public String message;
         public Status status;

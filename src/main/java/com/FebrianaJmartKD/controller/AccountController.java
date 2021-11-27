@@ -56,10 +56,10 @@ public abstract class AccountController implements BasicGetController<Account>{
 
     @PostMapping("/register")
     Account register
-            (         String name, String email, String password
-//                    @RequestParam String name,
-//                    @RequestParam String email,
-//                    @RequestParam String password
+            (         //String name, String email, String password
+                  @RequestParam String name,
+                      @RequestParam String email,
+                    @RequestParam String password
             )
     {
         if((REGEX_PATTERN_EMAIL.matcher(email).find()) && (REGEX_PATTERN_PASSWORD.matcher(password).find()) && !name.isBlank()){
@@ -86,7 +86,7 @@ public abstract class AccountController implements BasicGetController<Account>{
     }
 
     @PostMapping("/{id}/registerStore")
-    Store registerStore(int id, String name, String address, String phoneNumber){
+    Store registerStore(@RequestParam int id, @RequestParam String name, @RequestParam String address, @RequestParam String phoneNumber){
         if(accountTable.contains(accountTable.get(id)) && accountTable.get(id).store == null){
             Store newStore = new Store(name, address, phoneNumber, 0);
             accountTable.get(id).store = newStore;
@@ -97,7 +97,7 @@ public abstract class AccountController implements BasicGetController<Account>{
     }
 
     @PostMapping("/{id}/topUp")
-    boolean topUp(int id, double balance){
+    boolean topUp(@RequestParam int id, @RequestParam double balance){
         if(accountTable.contains(accountTable.get(id))){
             accountTable.get(id).balance += balance;
             return true;

@@ -15,7 +15,7 @@ import java.util.Date;
 
 public abstract class Invoice extends Serializable
 {
-    public Date date;
+    public final Date date;
     public int buyerId;
     public int productId;
     public int complaintId;
@@ -23,14 +23,14 @@ public abstract class Invoice extends Serializable
     //public Status status;
     //public ArrayList<Record> history= new ArrayList<>();
     
-    enum Rating{
+    public enum Rating{
     NONE,
     BAD,
     NEUTRAL,
     GOOD
     }
     
-    enum Status{
+    public enum Status{
     WAITING_CONFIRMATION,
     CANCELLED,
     ON_PROGRESS,
