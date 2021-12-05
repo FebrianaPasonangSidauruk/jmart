@@ -18,6 +18,7 @@ public class PaymentController implements BasicGetController<Payment>  {
     JsonTable<Payment> paymentTable;
     public static ObjectPoolThread<Payment> poolThread = new ObjectPoolThread<Payment>("Thread", PaymentController::timekeeper);
 
+
     @PostMapping("/{id}/accept")
     boolean accept(@RequestParam int id) {
         for(Payment payment : paymentTable){
@@ -66,7 +67,7 @@ public class PaymentController implements BasicGetController<Payment>  {
         return null;
     }
 
-    public JsonTable<Payment> getJsonTable(){
+    public JsonTable<Payment> getJsonTable() {
         return paymentTable;
     }
 
@@ -86,8 +87,7 @@ public class PaymentController implements BasicGetController<Payment>  {
         return false;
     }
 
-
-    private static boolean timekeeper(Payment payment){
+    private static Boolean timekeeper(Payment payment) {
         if (payment.history.isEmpty()) {
             return false;
         } else {

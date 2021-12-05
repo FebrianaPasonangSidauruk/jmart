@@ -10,8 +10,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/product")
 public class ProductController implements BasicGetController<Product> {
-    @JsonAutowired(value = Product.class, filepath = "C:/Users/Febriana/jmart/jmart/src/main/java/com/Json/randomProductList.json")
-    public static JsonTable<Product> productTable;
+    @JsonAutowired(value = Product.class, filepath = "C:/Users/Febriana/jmart/jmart/src/main/java/com/Json/Product.json")JsonTable<Product> productTable;
+
 
     @Override
     public JsonTable<Product> getJsonTable() {
@@ -26,8 +26,7 @@ public class ProductController implements BasicGetController<Product> {
                     @RequestParam int pageSize
             )
     {
-        Predicate<Product> predicate = obj -> (obj.accountId == id);
-        return Algorithm.<Product>paginate(productTable, page, pageSize, predicate);
+        return Algorithm.<Product>paginate(getJsonTable(),page,pageSize, p -> (p.accountId == id));
     }
 
     @PostMapping("/create")
@@ -43,45 +42,29 @@ public class ProductController implements BasicGetController<Product> {
                     @RequestParam byte shipmentPlans
             )
     {
-        Product product = Algorithm.<Product>find(productTable, obj -> obj.accountId == accountId);
-        Account account = Algorithm.<Account>find(AccountController.accountTable, obj -> obj.id == accountId);
-        if(product == null || account.store != null) return null;
-
-        Product newProduct = new Product(accountId, name, weight, conditionUsed, price, discount, category, shipmentPlans);
-        productTable.add(newProduct);
-        return newProduct;
+        for(Account account : AccountController.accountTable){
+            if(account.id == accountId && account.store != null){
+                Product newProduct = new Product(accountId, name, weight, conditionUsed, price, discount, category, shipmentPlans);
+                productTable.add(newProduct);
+                return newProduct;
+            }
+        }
+        return null;
     }
 
     @GetMapping("/getFiltered")
     List<Product> getProductByStore
             (
-                    @RequestParam int page,
-                    @RequestParam int pageSize,
-                    @RequestParam(defaultValue = "0") int accountId,
-                    @RequestParam(defaultValue = "") String search,
-                    @RequestParam(defaultValue = "0") int minPrice,
-                    @RequestParam(defaultValue = "0") int maxPrice,
-                    @RequestParam(required = false) ProductCategory category
+                    @RequestParam(defaultValue="0")  int page,
+                    @RequestParam(defaultValue="5")  int pageSize,
+                    @RequestParam  int accountId,
+                    @RequestParam  String search,
+                    @RequestParam  int minPrice,
+                    @RequestParam  int maxPrice,
+                    @RequestParam  ProductCategory category
             )
     {
-        Predicate<Product> predicate = obj -> {
-            if(accountId != 0 && obj.accountId == accountId){
-                return true;
-            }
-            if(!search.isBlank() && obj.name.contains(search)){
-                return true;
-            }
-            if(minPrice != 0 && obj.price > minPrice){
-                return true;
-            }
-            if(maxPrice != 0 && obj.price < maxPrice){
-                return true;
-            }
-            if(category != null && obj.category == category){
-                return true;
-            }
-            return false;
-        };
-        return Algorithm.<Product>paginate(productTable, page, pageSize, predicate);
+        Predicate<Product> pred = p -> ((p.accountId == accountId) && (p.name.toLowerCase().contains(search.toLowerCase())) && (p.price >= minPrice && p.price <= maxPrice) && (p.category == category));
+        return Algorithm.<Product>paginate(getJsonTable(), page, pageSize, pred);
     }
 }

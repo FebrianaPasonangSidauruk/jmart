@@ -26,16 +26,22 @@ import java.util.List;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+
 import java.util.stream.Collectors;
+
 
 @SpringBootApplication
 
+//@EnableWebMvc
+//@ComponentScan(basePackages={"com.FebrianaJmartKD.controller"})
 public class Jmart {
 
-    public static long DELIVERED_LIMIT_MS ;
-    public static long ON_DELIVERY_LIMIT_MS ;
-    public static long ON_PROGRESS_LIMIT_MS ;
-    public static long WAITING_CONF_LIMIT_MS ;
+//    public static long DELIVERED_LIMIT_MS ;
+//    public static long ON_DELIVERY_LIMIT_MS ;
+//    public static long ON_PROGRESS_LIMIT_MS ;
+//    public static long WAITING_CONF_LIMIT_MS ;
 
     public static void main (String[] args){
         //SpringApplication.run(Jmart.class, args);
