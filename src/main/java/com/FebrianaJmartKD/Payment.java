@@ -24,7 +24,9 @@ public class Payment extends Invoice
             this.message = message;
         }
     }
-    
+
+
+    //constructor
     public Payment(int buyerId, int productId, int productCount, Shipment shipment)
     {
         super(buyerId, productId);

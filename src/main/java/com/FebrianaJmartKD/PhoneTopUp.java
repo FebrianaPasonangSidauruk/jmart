@@ -1,5 +1,12 @@
 package com.FebrianaJmartKD;
 
+/**
+ * class Phone Top Up
+ *
+ * @author Febriana Pasonang Sidauruk
+ * @version 25 September 2021
+ */
+
 public class PhoneTopUp extends Invoice
 {
     public String phoneNumber;

@@ -1,4 +1,14 @@
 package com.FebrianaJmartKD.controller;
+
+/**
+ * class PaymentController
+ *
+ * mengontrol pembelian dan disini juga ditampilkan pesan apakah dalam progress, dibatalkan, menunggu konfirmasi, ataupun on delivery
+ *
+ * @author Febriana Pasonang Sidauruk
+ *
+ */
+
 import com.FebrianaJmartKD.ObjectPoolThread;
 import com.FebrianaJmartKD.Payment;
 import com.FebrianaJmartKD.dbjson.JsonTable;
@@ -6,17 +16,45 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.*;
 import com.FebrianaJmartKD.dbjson.JsonAutowired;
 import com.FebrianaJmartKD.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping("/payment")
 public class PaymentController implements BasicGetController<Payment>  {
-    public static final long DELIVERED_LIMIT_MS =2;
-    public static final long ON_DELIVERY_LIMIT_MS =4;
-    public static final long ON_PROGRESS_LIMIT_MS =5;
-    public static final long WAITING_CONF_LIMIT_MS =6;
+    public static final long DELIVERED_LIMIT_MS =2000;
+    public static final long ON_DELIVERY_LIMIT_MS = 2000;
+    public static final long ON_PROGRESS_LIMIT_MS = 2000;
+    public static final long WAITING_CONF_LIMIT_MS = 2000;
     public static @JsonAutowired(value = Payment.class, filepath = "C:/Users/Febriana/jmart/jmart/src/main/java/com/Json/payment.json")
     JsonTable<Payment> paymentTable;
     public static ObjectPoolThread<Payment> poolThread = new ObjectPoolThread<Payment>("Thread", PaymentController::timekeeper);
+
+    //Mendapatkan invoice dari penjual produk
+    @GetMapping("/{id}/page")
+    @ResponseBody List<Payment> getInvoices(@PathVariable int id, @RequestParam(defaultValue="0") int page, @RequestParam(defaultValue="1000") int pageSize){
+        List<Payment> paymentList = new ArrayList<>();
+        Account accountTarget = Algorithm.<Account>find(AccountController.accountTable,  a -> a.id == id);
+        if(accountTarget != null){
+            for(Payment payment : paymentTable){
+                for(Product product : ProductController.productTable){
+                    if(payment.productId == product.id && product.accountId == accountTarget.id){
+                        paymentList.add(payment);
+                    }
+                }
+            }
+        }
+        return Algorithm.paginate(paymentList, page, pageSize, e->true);
+    }
+
+    //Mendapatkan invoice dari purchase
+    @GetMapping("/{id}/purchases/page")
+    @ResponseBody List<Payment> getMyInvoices(@PathVariable int id, @RequestParam(defaultValue="0") int page, @RequestParam(defaultValue="1000") int pageSize){
+        return Algorithm.<Payment>paginate(getJsonTable(), page, pageSize, p -> p.buyerId == id);
+    }
 
 
     @PostMapping("/{id}/accept")
@@ -50,10 +88,16 @@ public class PaymentController implements BasicGetController<Payment>  {
         for(Account account : AccountController.accountTable){
             if(account.id == buyerId){
                 for(Product product : ProductController.productTable){
-                    if(product.accountId == productId){
+                    System.out.println("Check 1");
+                    if(product.id == productId){
+                        System.out.println("Check 2");
                         Payment newPayment = new Payment(buyerId, productId, productCount, new Shipment(shipmentAddress, 0, shipmentPlan, null));
+                        System.out.println("Check 3");
                         double totalPay = newPayment.getTotalPay(product);
+                        System.out.println(totalPay);
+                        System.out.println("Check 4");
                         if(account.balance >= totalPay){
+                            System.out.println("Check 5");
                             account.balance -= totalPay;
                             newPayment.history.add(new Payment.Record(Invoice.Status.WAITING_CONFIRMATION, "WAITING_CONFIRMATION"));
                             paymentTable.add(newPayment);

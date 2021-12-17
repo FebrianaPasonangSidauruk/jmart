@@ -3,7 +3,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * class Recognizable
+ * class Serializable
  *
  * @author Febriana Pasonang Sidauruk
  * @version 25 September 2021

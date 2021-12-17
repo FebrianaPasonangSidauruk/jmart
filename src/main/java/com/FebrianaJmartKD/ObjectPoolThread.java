@@ -1,5 +1,12 @@
 package com.FebrianaJmartKD;
 
+/**
+ * class Object Pool Thread
+ *
+ * @author Febriana Pasonang Sidauruk
+ *
+ */
+
 import java.lang.Object;
 import java.util.Vector;
 import java.util.function.Function;

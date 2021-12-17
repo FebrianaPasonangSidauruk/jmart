@@ -1,5 +1,13 @@
 package com.FebrianaJmartKD.controller;
 
+/**
+ * class BasicGetController
+ * Untuk mendapatkan id dan page (Get method)
+ *
+ * @author Febriana Pasonang Sidauruk
+ *
+ */
+
 import java.util.List;
 import com.FebrianaJmartKD.dbjson.JsonTable;
 import com.FebrianaJmartKD.dbjson.Serializable;
@@ -16,8 +24,8 @@ public interface BasicGetController<T extends Serializable> {
     }
 
     @GetMapping("/page")
-    default List<T> getPage (@PathVariable int page, @PathVariable int pageSize){
-        return null;
+    default @ResponseBody List<T> getPage (@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue="5") int pageSize){
+        return Algorithm.<T>paginate(getJsonTable(),page,pageSize,e -> true);
     }
 
     public abstract JsonTable<T> getJsonTable();

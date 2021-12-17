@@ -13,6 +13,14 @@ import java.util.Arrays;
  *
  * @author Febriana Pasonang Sidauruk
  * @version 9 October 2021
+ *
+ * digunakan untuk mempermudah pemrosesan data-data agar dapat dipakai secara berulang
+ * terdapat beberapa method yaitu :
+ * count : jika mengembalikan logika true maka dilakukan inc terhadap variabel yg bertindak sbg counter
+ * find : mereturn objek sesuai dengan yang dideskripsikan oleh predicate
+ * exists : memberikan informasi apakah objek ada dalam sebuah list/array
+ * min : mengembalikan objek terkecil diantara dua parameter
+ * max : kebalikan dari min
  */
 
 public class Algorithm {
@@ -20,6 +28,7 @@ public class Algorithm {
 
     }
 
+    //collect
     public static <T> List<T> collect (T[] array, T value){
         Predicate<T> prd = val -> val.equals(value);
         List<T> list = new ArrayList<>();
@@ -89,6 +98,7 @@ public class Algorithm {
         return list;
     }
 
+// count
     public static <T>int count(T[] array, T value){
         int counter = 0;
         Predicate pre =(arg)-> value == arg;

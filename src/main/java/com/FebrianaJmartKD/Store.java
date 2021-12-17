@@ -6,6 +6,8 @@ package com.FebrianaJmartKD;
  *
  * @author Febriana Pasonang Sidauruk
  * @version 25 September 2021
+ *
+ * untuk akun store
  */
 
 import java.util.regex.Matcher;

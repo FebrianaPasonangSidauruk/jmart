@@ -42,8 +42,4 @@ public class Product extends Serializable
                 "\ndiscount: " + discount +
                 "\naccountId: " + accountId;
     }
-    
-    /*public boolean read(String content){
-        return false;
-    }*/
 }

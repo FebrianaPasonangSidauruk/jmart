@@ -6,6 +6,8 @@ package com.FebrianaJmartKD;
  *
  * @author Febriana Pasonang Sidauruk
  * @version 27 September 2021
+ *
+ * flags dalam pemrograman untuk memberi informasi ekspedisi
  */
 
 import java.util.Date;

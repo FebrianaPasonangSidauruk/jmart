@@ -5,6 +5,8 @@ package com.FebrianaJmartKD;
  *
  * @author Febriana Pasonang Sidauruk
  * @version 9 October 2021
+ *
+ * melakukan perbandingn antara dua tipe parameter
  */
 
 public class Pair<T,U> {

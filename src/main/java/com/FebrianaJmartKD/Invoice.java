@@ -20,8 +20,7 @@ public abstract class Invoice extends Serializable
     public int productId;
     public int complaintId;
     public Rating rating;
-    //public Status status;
-    //public ArrayList<Record> history= new ArrayList<>();
+
     
     public enum Rating{
     NONE,
